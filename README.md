@@ -23,7 +23,7 @@ npm ci          # cài đúng phiên bản trong package-lock.json (chỉ cần 
 npm test        # chạy toàn bộ test tự động (node:test), dùng CSDL tạm, không đụng data/vuon-toan.db
 npm start       # mở http://localhost:3000
 ```
-
+..
 Chạy riêng một file test: `node --test test/estimate.test.js`. Chạy một test theo tên: `node --test --test-name-pattern="T-31"`.
 
 Lần chạy đầu, server tự tạo `data/vuon-toan.db` và nạp dữ liệu mẫu từ `data/seed.json`.
