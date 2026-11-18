@@ -27,6 +27,7 @@ fs.writeFileSync(inputCss, `@tailwind base;\n@tailwind components;\n@tailwind ut
 const out = path.join(ROOT, 'public/assets/css/tailwind.build.css');
 execFileSync(process.platform === 'win32' ? 'npx.cmd' : 'npx',
   ['tailwindcss', '-c', tmpConfig, '-i', inputCss, '-o', out, '--minify'],
-  { cwd: ROOT, stdio: 'inherit' });
+  // Windows: Node ≥ 18.20.2/20.12.2 không cho spawn file .cmd nếu thiếu shell (EINVAL)
+  { cwd: ROOT, stdio: 'inherit', shell: process.platform === 'win32' });
 fs.rmSync(tmpConfig, { force: true }); fs.rmSync(inputCss, { force: true });
 console.log(`Đã tạo ${path.relative(ROOT, out)} (${(fs.statSync(out).size / 1024).toFixed(0)} KB)`);

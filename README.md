@@ -16,14 +16,27 @@ và khu vực giáo viên (theo dõi lớp, cấp tài khoản). Đợt 1 đã n
 
 ## 1. Cách chạy
 
-Yêu cầu: máy có **Node.js 18+**.
+Yêu cầu: máy có **Node.js 18–22** (LTS). Trên Windows, Node mới hơn có thể cài lỗi `better-sqlite3` vì chưa có bản dựng sẵn.
 
 ```bash
-npm install     # chỉ cần chạy 1 lần đầu
+npm ci          # cài đúng phiên bản trong package-lock.json (chỉ cần chạy 1 lần đầu)
+npm test        # chạy toàn bộ test tự động (node:test), dùng CSDL tạm, không đụng data/vuon-toan.db
 npm start       # mở http://localhost:3000
 ```
 
+Chạy riêng một file test: `node --test test/estimate.test.js`. Chạy một test theo tên: `node --test --test-name-pattern="T-31"`.
+
 Lần chạy đầu, server tự tạo `data/vuon-toan.db` và nạp dữ liệu mẫu từ `data/seed.json`.
+Seed **chỉ chạy khi CSDL trống**. Sau khi sửa `data/seed.json`, chạy `npm run reset-db` (thao tác này xóa điểm đã lưu).
+
+### Dạng bài "Ước lượng trước khi tính đúng" (Track B)
+
+- Đường vào: đăng nhập `hocsinh01` → Trang chủ → thẻ **Bài 10** → "Phiếu luyện tập: Ước lượng trước khi tính đúng" → `lesson.html?lesson=bai-10&set=phieu-uoc-luong`. Bài 10 cần hoàn thành Bài 9; trong seed chỉ `hocsinh01` đã hoàn thành.
+- Học sinh nhập ước lượng và bấm **Chốt** (hoặc Enter). Sau đó ô "Tính đúng" mới mở.
+- Quy tắc chấm (`server/estimate.js`): ước lượng hợp lý khi nằm trong `[⌈0,8n⌉, ⌊1,2n⌋]`, tính bằng số nguyên. Câu chỉ tính đúng khi ước lượng hợp lý **và** kết quả đúng. Đầu vào hợp lệ là số nguyên không âm, tối đa 6 chữ số.
+- **Quy ước khóa đáp án:** trong `POST /api/submissions`, `answers["<id>"]` là kết quả tính đúng, còn `answers["<id>__est"]` là ước lượng.
+- Thiết kế và lý do: `docs/Decisions.md` (ADR-001..006). Yêu cầu: `docs/Requirements.md`. Kế hoạch/kết quả test: `docs/Test_plan.md`, `docs/TEST_REPORT.md`. Tự chấm theo rubric: `docs/RUBRIC_CHECKLIST.md`.
+- Chuẩn bị bài nộp: `npm run build:submission` chép tài liệu vào `submission/hoang_mai_toan_173820_n32/artifacts/`.
 
 ### Tài khoản mẫu
 

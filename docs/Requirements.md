@@ -16,7 +16,7 @@ Thêm một dạng bài luyện tập vào Vườn Toán: học sinh ước lư�
 Làm:
 - Một loại câu hỏi mới (tạm đặt tên `estimate`) và cách chấm riêng cho nó.
 - Ít nhất 12 câu hỏi synthetic trong `data/seed.json`.
-- Giao diện hai bước trong `public/assets/js/pages/exercise.js`.
+- Giao diện hai bước cho type `estimate` trong trang làm bài chung (`public/assets/js/components/estimate-question.js`, dùng trong `pages/lesson.js`), lối vào từ phiếu Bài 10 (`pages/exercise.js`) — xem ADR-005.
 - Lệnh `npm test`, CI chạy trên Pull Request, tài liệu bàn giao.
 
 Không làm:

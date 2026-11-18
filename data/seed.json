@@ -3019,6 +3019,109 @@
           "points": 5
         }
       ]
+    },
+    "phieu-uoc-luong": {
+      "lessonId": "bai-10",
+      "title": "Phiếu luyện tập: Ước lượng trước khi tính đúng (nhân, chia)",
+      "kind": "exercise",
+      "questions": [
+        {
+          "id": "uoc-luong-01",
+          "type": "estimate",
+          "prompt": "38 × 6",
+          "correctAnswer": "228",
+          "points": 5,
+          "category": "Ước lượng phép nhân"
+        },
+        {
+          "id": "uoc-luong-02",
+          "type": "estimate",
+          "prompt": "47 × 5",
+          "correctAnswer": "235",
+          "points": 5,
+          "category": "Ước lượng phép nhân"
+        },
+        {
+          "id": "uoc-luong-03",
+          "type": "estimate",
+          "prompt": "62 × 4",
+          "correctAnswer": "248",
+          "points": 5,
+          "category": "Ước lượng phép nhân"
+        },
+        {
+          "id": "uoc-luong-04",
+          "type": "estimate",
+          "prompt": "19 × 7",
+          "correctAnswer": "133",
+          "points": 5,
+          "category": "Ước lượng phép nhân"
+        },
+        {
+          "id": "uoc-luong-05",
+          "type": "estimate",
+          "prompt": "53 × 3",
+          "correctAnswer": "159",
+          "points": 5,
+          "category": "Ước lượng phép nhân"
+        },
+        {
+          "id": "uoc-luong-06",
+          "type": "estimate",
+          "prompt": "28 × 4",
+          "correctAnswer": "112",
+          "points": 5,
+          "category": "Ước lượng phép nhân"
+        },
+        {
+          "id": "uoc-luong-07",
+          "type": "estimate",
+          "prompt": "71 × 6",
+          "correctAnswer": "426",
+          "points": 5,
+          "category": "Ước lượng phép nhân"
+        },
+        {
+          "id": "uoc-luong-08",
+          "type": "estimate",
+          "prompt": "84 × 5",
+          "correctAnswer": "420",
+          "points": 5,
+          "category": "Ước lượng phép nhân"
+        },
+        {
+          "id": "uoc-luong-09",
+          "type": "estimate",
+          "prompt": "245 : 5",
+          "correctAnswer": "49",
+          "points": 5,
+          "category": "Ước lượng phép chia"
+        },
+        {
+          "id": "uoc-luong-10",
+          "type": "estimate",
+          "prompt": "312 : 6",
+          "correctAnswer": "52",
+          "points": 5,
+          "category": "Ước lượng phép chia"
+        },
+        {
+          "id": "uoc-luong-11",
+          "type": "estimate",
+          "prompt": "427 : 7",
+          "correctAnswer": "61",
+          "points": 5,
+          "category": "Ước lượng phép chia"
+        },
+        {
+          "id": "uoc-luong-12",
+          "type": "estimate",
+          "prompt": "568 : 8",
+          "correctAnswer": "71",
+          "points": 5,
+          "category": "Ước lượng phép chia"
+        }
+      ]
     }
   }
 }

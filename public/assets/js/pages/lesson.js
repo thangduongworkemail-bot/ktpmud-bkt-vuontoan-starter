@@ -12,9 +12,18 @@
   const container = document.getElementById('questions-container');
   const progressBar = document.getElementById('lesson-progress');
   const progressText = document.getElementById('lesson-progress-text');
+  const submitBtn = document.getElementById('btn-submit-lesson');
+  // Dạng bài "Ước lượng trước khi tính đúng" (type 'estimate') — components/estimate-question.js
+  const Estimate = window.MathApp.components.EstimateQuestion;
+
+  /** Câu estimate cần đủ 2 bước; các type cũ giữ nguyên cách đếm như trước. */
+  function isAnswered(q) {
+    if (q.type === 'estimate' && Estimate) return Estimate.isAnswered(q, answers);
+    return answers[q.id] != null && String(answers[q.id]).trim() !== '';
+  }
 
   function updateProgress() {
-    const done = questions.filter(q => answers[q.id] != null && String(answers[q.id]).trim() !== '').length;
+    const done = questions.filter(isAnswered).length;
     if (progressBar) progressBar.style.width = questions.length ? `${Math.round(done / questions.length * 100)}%` : '0%';
     if (progressText) progressText.textContent = `Đã trả lời ${done}/${questions.length} câu`;
   }
@@ -34,6 +43,8 @@
       } else if (q.type === 'compare') {
         body = `<div class="flex gap-2.5 mt-3">${['>', '<', '='].map(s => `
           <button type="button" data-q="${q.id}" data-val="${s}" class="opt-btn w-14 h-14 rounded-2xl bg-surface-container-low font-headline-lg text-primary">${s}</button>`).join('')}</div>`;
+      } else if (q.type === 'estimate' && Estimate) {
+        body = Estimate.renderBody(q);
       } else {
         body = `<input data-q="${q.id}" type="text" inputmode="numeric" placeholder="Điền đáp số..." class="mt-3 w-56 h-14 text-center rounded-2xl bg-surface-container-low text-primary font-headline-lg focus:outline-none focus:ring-4 focus:ring-primary-fixed"/>`;
       }
@@ -51,6 +62,7 @@
       updateProgress();
     }));
     container.querySelectorAll('input[data-q]').forEach(inp => inp.addEventListener('input', () => { answers[inp.dataset.q] = inp.value.trim(); updateProgress(); }));
+    if (Estimate) Estimate.bind(container, { setId, userId: window.MathApp.user && window.MathApp.user.id, answers, onChange: updateProgress, submitButton: submitBtn });
     updateProgress();
   }
 
@@ -72,8 +84,10 @@
     } catch (err) { container.innerHTML = `<p class="font-body-md">Chưa tải được bài: ${err.message}</p>`; }
   }
 
-  document.getElementById('btn-submit-lesson').addEventListener('click', async () => {
-    const missing = questions.length - Object.keys(answers).filter(k => String(answers[k]).trim() !== '').length;
+  submitBtn.addEventListener('click', async () => {
+    const invalid = Estimate && Estimate.firstInvalid(container);
+    if (invalid) { invalid.focus(); return; } // lỗi định dạng đã hiện ngay dưới ô nhập (B-12)
+    const missing = questions.filter(q => !isAnswered(q)).length;
     if (missing > 0 && !confirm(`Em còn ${missing} câu chưa trả lời. Vẫn nộp bài nhé?`)) return;
     try {
       const r = await window.MathAPI.post('/api/submissions', { setId, answers, durationSec: Math.round((Date.now() - startedAt) / 1000) });
@@ -82,6 +96,10 @@
       box.innerHTML = `<div class="text-4xl mb-1">${r.scorePercent >= 80 ? '🎉' : r.scorePercent >= 50 ? '💪' : '🌱'}</div>
         <h3 class="font-headline-md text-headline-md">Em đạt ${r.scorePercent}% — đúng ${r.correctCount}/${r.totalCount} câu!</h3>
         <p class="font-body-md mt-1">${r.starsEarned ? `Nhận thêm ⭐ +${r.starsEarned} Sao vàng.` : 'Điểm chưa vượt lần tốt nhất nên chưa cộng thêm sao.'} Kết quả đã được lưu vào hồ sơ.</p>`;
+      if (Estimate) {
+        Estimate.showFeedback(container, r.detail);
+        Estimate.clearSaved(setId, window.MathApp.user && window.MathApp.user.id);
+      }
       box.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } catch (err) { alert(`Chưa nộp được bài: ${err.message}`); }
   });

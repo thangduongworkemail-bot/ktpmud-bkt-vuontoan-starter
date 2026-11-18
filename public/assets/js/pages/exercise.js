@@ -170,3 +170,27 @@ let activeInputId = 'math-input-3';
     const timerEl = document.getElementById('display-timer');
     if (timerEl) timerEl.textContent = `${m}:${s}`;
   }, 1000);
+
+  /* Lối vào các phiếu khác của cùng bài học (B-01): thẻ "Bài 10" ở trang chủ mở trang
+   * này, nên các bộ đề khác gắn vào bài 10 trong DB (vd phiếu "Ước lượng trước khi
+   * tính đúng") được liệt kê ngay đầu phiếu, mở trong trang làm bài chung lesson.html.
+   * Danh sách lấy từ /api/lessons nên thêm/bớt bộ đề trong DB không cần sửa code. */
+  document.addEventListener('mathapp:user-ready', async () => {
+    const mount = document.getElementById('lesson-other-sets');
+    if (!mount) return;
+    try {
+      const { lessons } = await window.MathAPI.get('/api/lessons');
+      const lesson = lessons.find(l => (l.questionSets || []).some(s => s.id === 'phieu-bai-9-10'));
+      const others = lesson ? lesson.questionSets.filter(s => s.id !== 'phieu-bai-9-10') : [];
+      if (!others.length) return;
+      const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      mount.innerHTML = `<div class="rounded-lg bg-tertiary-fixed/40 p-space-md flex flex-col gap-2">
+        <p class="font-headline-sm text-label-lg text-on-surface">Bài ${lesson.number} còn ${others.length} phiếu luyện tập khác:</p>
+        <div class="flex flex-wrap gap-2">${others.map(s => `
+          <a href="lesson.html?lesson=${encodeURIComponent(lesson.id)}&set=${encodeURIComponent(s.id)}"
+             class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-primary text-on-primary font-headline-sm text-label-md shadow-[0_3px_0_0_#005320] focus:outline-none focus:ring-4 focus:ring-primary-fixed">
+            <span class="material-symbols-outlined text-[20px]" aria-hidden="true">calculate</span>${esc(s.title)}</a>`).join('')}
+        </div></div>`;
+      mount.classList.remove('hidden');
+    } catch (_) { /* không tải được danh sách thì giữ nguyên phiếu hiện tại */ }
+  });

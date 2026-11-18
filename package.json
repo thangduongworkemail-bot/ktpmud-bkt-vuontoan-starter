@@ -7,8 +7,10 @@
   "scripts": {
     "start": "node server/index.js",
     "dev": "node server/index.js",
+    "test": "node --test",
     "reset-db": "node -e \"require('fs').rmSync('data/vuon-toan.db',{force:true}); console.log('Da xoa DB, chay npm start de tao lai')\"",
-    "build:css": "node tools/build-css.js"
+    "build:css": "node tools/build-css.js",
+    "build:submission": "node tools/build-submission.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

@@ -72,3 +72,32 @@ Chọn A.
 Vì sao: mục tiêu của dạng bài là ước lượng trước khi tính, nên ước lượng phải ảnh hưởng đến điểm. Nếu theo B thì ước lượng chỉ là phần trang trí. C đòi chia điểm ra nửa và xử lý số lẻ, thêm chỗ dễ sai.
 
 Đánh đổi: học sinh ước lượng tốt nhưng tính sai vẫn bị tính sai cả câu. Phản hồi hiển thị riêng 4 trường hợp (R5) để học sinh biết mình sai ở bước nào.
+## ADR-005: Giao diện 2 bước đặt ở trang làm bài chung `lesson.html`, lối vào từ phiếu Bài 10
+
+Trạng thái: đã cài đặt (cần cả nhóm xác nhận, vì khác dự kiến ban đầu "UI trong `exercise.js`" ở `Requirements.md`).
+
+Vấn đề: khi đọc mã nguồn thật thì thấy `exercise.js` không phải trình render câu hỏi theo `type`. Nó là phiếu tĩnh viết cứng cho đúng bộ `phieu-bai-9-10`: DOM có sẵn trong `exercise.html` (`slot-1-1`, `math-input-1`...) và `setId` cũng viết cứng. Trình render theo `type` thật sự là `pages/lesson.js` (`lesson.html?lesson=<id>&set=<setId>`), nơi mọi bộ đề giáo viên tạo được mở. Thêm vào đó, thẻ "Bài 10" ở trang chủ mở `questionSets[0]` của bài. Với bài 10 đó là `phieu-bai-9-10`, đi thẳng tới `exercise.html`, nên bộ đề mới gắn vào `bai-10` sẽ không tự hiện ra.
+
+Các cách đã cân nhắc:
+- A. Viết thêm phần 2 bước vào `exercise.html`/`exercise.js`, cạnh phiếu cũ.
+- B. Render type `estimate` trong trình render chung `lesson.js` (qua component riêng `components/estimate-question.js`). Phiếu Bài 10 (`exercise.html`) hiện danh sách "các phiếu khác của bài này", lấy từ `/api/lessons`.
+- C. Sửa `index.js` để thẻ Bài 10 mở thẳng bộ đề mới.
+
+Chọn B.
+
+Vì sao: B mở rộng đúng điểm mở rộng có sẵn của hệ thống (render theo `type`), nên bộ đề `estimate` nào sau này cũng làm được ở `lesson.html`, không chỉ một phiếu viết cứng. Lối vào vẫn nằm trong luồng học bình thường (B-01): Trang chủ → thẻ Bài 10 → phiếu Bài 10 → "Phiếu luyện tập: Ước lượng trước khi tính đúng". A trộn hai bộ đề trên một trang, có hai nút nộp, và phải nhân đôi logic render. C đổi hành vi thẻ Bài 10 đang có và làm mất lối vào phiếu cũ.
+
+Đánh đổi: thêm một bước bấm từ phiếu Bài 10. `exercise.js` chỉ thêm khối lối vào, không đổi logic phiếu cũ.
+
+Lưu ý về khóa bài: `bai-10` có `unlockAfter: "bai-9"` (mọi bài trong seed nối tiếp nhau), nên bài **không** mở từ đầu cho mọi học sinh. Trong seed, chỉ `hocsinh01` đã hoàn thành `bai-9`, vì vậy demo/test dùng `hocsinh01` (test T-30 kiểm tra điều này). Nhóm giữ nguyên quy tắc khóa bài vì nó là hành vi có sẵn.
+
+## ADR-006: Chi tiết cài đặt quy tắc chấm
+
+Trạng thái: đã cài đặt.
+
+- Logic thuần nằm ở `server/estimate.js`, gồm hằng `ESTIMATE_TOLERANCE_PERCENT = 20` (một chỗ duy nhất). Có thêm một tầng điều phối theo `type` ở `server/grading.js`. `POST /api/submissions` chỉ đổi đúng chỗ chấm từng câu để gọi `gradeQuestion`. Nhánh 4 type cũ được chuyển nguyên văn sang `grading.js` và có test hồi quy T-17 (cả unit lẫn qua API).
+- Công thức tổng quát với p% là `lo = ⌈n·(100−p)/100⌉`, `hi = ⌊n·(100+p)/100⌋`, tính bằng số nguyên. Với p = 20 nó trùng đúng công thức ADR-002; test kiểm tra mọi n từ 0 đến 5000.
+- Đầu vào không hợp lệ (R6) **không** làm request lỗi 400. Câu đó bị tính sai, và `detail` trả về `valid: false` để giao diện giải thích. Lý do: giữ đúng hành vi của các type cũ (nộp gì cũng được chấm). Giao diện chặn và báo lỗi định dạng ngay dưới ô nhập trước khi nộp (B-12).
+- Ước lượng bằng đúng đáp án vẫn nằm trong khoảng nên được tính hợp lý. Quy tắc "ước lượng trước" được bảo đảm bằng thứ tự giao diện (ADR-003), không bằng cách phạt ước lượng quá chính xác.
+- Sau khi nộp, `detail` của câu `estimate` có `outcome` (một trong 4 mã), `feedback` (câu phản hồi tiếng Việt), `acceptRange` và kết quả từng bước. Khoảng chấp nhận chỉ xuất hiện sau khi nộp (B-04, test T-31).
+- Sao thưởng và tiến độ dùng chung cơ chế cũ theo `lesson_id`. Vì `phieu-uoc-luong` và `phieu-bai-9-10` cùng gắn `bai-10`, `best_score` của bài 10 là điểm cao nhất giữa hai phiếu.

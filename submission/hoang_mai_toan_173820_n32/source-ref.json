@@ -1,0 +1,8 @@
+{
+  "starter_repo": "https://github.com/fossbk-spec/ktpmud-bkt-vuontoan-starter",
+  "starter_commit": "057a48205f50f0f30d6260be1a44b343a167a3e7",
+  "fork_url": "https://github.com/thangduongworkemail-bot/ktpmud-bkt-vuontoan-starter",
+  "final_commit": "REPLACE_VOI_FINAL_COMMIT",
+  "release_tag": "bkt-2026-173820_n32-rc1",
+  "ci_run_url": "REPLACE_VOI_CI_RUN_URL"
+}
