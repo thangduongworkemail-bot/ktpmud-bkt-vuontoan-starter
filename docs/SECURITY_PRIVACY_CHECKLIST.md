@@ -45,4 +45,7 @@ Vi phạm PII/PHI, secret hoặc truy cập production ⇒ **dừng chấm** (đ
 
 - Có thể bỏ qua thứ tự hai bước bằng cách gọi API trực tiếp (ADR-003). Đây là giới hạn đã chấp nhận, không phải lỗ hổng lộ dữ liệu.
 - `lesson.js` có sẵn từ trước vẫn chèn `q.prompt` không escape. Nội dung câu hỏi do giáo viên nhập; nhóm không sửa vì ngoài phạm vi. Câu `estimate` dùng prompt đã escape trong component.
-- `npm audit` báo một số cảnh báo ở dependency có sẵn của starter. Nhóm không nâng version để tránh đổi hành vi starter. _Ghi số lượng và mức độ khi chạy `npm audit`._
+- `npm audit` (18/11) báo 12 cảnh báo ở dependency có sẵn của starter: 11 mức high, 1 mức moderate.
+  - 11 cảnh báo nằm trong cây phụ thuộc của devDependency `tailwindcss` (`picomatch`, `micromatch`, `chokidar`, `postcss-selector-parser`…). Gói này chỉ dùng khi chạy `npm run build:css`, không chạy trên server.
+  - 1 cảnh báo ở dependency chạy thật (`npm audit --omit=dev`): `body-parser <1.20.9`, mức high, lỗi DoS khi body nén có byte thừa ([GHSA-27r3-jxmh-p828](https://github.com/advisories/GHSA-27r3-jxmh-p828)). Gói này đi kèm `express`; `npm audit fix` sửa được mà không phải nâng phiên bản lớn.
+  - Nhóm không nâng version để tránh đổi hành vi starter.

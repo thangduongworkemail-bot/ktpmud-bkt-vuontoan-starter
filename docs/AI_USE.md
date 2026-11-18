@@ -15,6 +15,7 @@ Không cần dán toàn bộ prompt. Không ghi secret hay PII. Trong buổi v�
 | 6 | 18/11/2026 | Claude Code, model Claude Opus 5.5 | Viết test `node:test` và workflow CI | `test/*.test.js`, `.github/workflows/test.yml`, `package.json` (`npm test`) | Chạy local Node 22: 34/34; CI chưa chạy | nhóm điền | `<alias>` |
 | 7 | 18/11/2026 | Claude Code, model Claude Opus 5.5 | Sửa lỗi `npm run build:css` trên Windows (spawn `npx.cmd` cần shell) | `tools/build-css.js`, `public/assets/css/tailwind.build.css` | Build lại thành công, class mới có trong CSS | nhóm điền | `<alias>` |
 | 8 | 18/11/2026 | Claude Code, model Claude Opus 5.5 | Ghi ADR-005, ADR-006 và cập nhật một dòng phạm vi trong Requirements | `docs/Decisions.md`, `docs/Requirements.md` | Nhóm đọc và đồng ý/không đồng ý với từng lựa chọn | nhóm điền | `<alias>` |
+| 9 | 18/11/2026 | Claude Code, model Claude Opus 5.5 | Chạy thử bản clone mới (T-41), rồi sửa bài nộp theo lỗi của `validate`: đổi tên thư mục và slug, điền `case_study_id`, `source-ref.json`, README bài nộp; thêm nhánh `test` vào trigger CI; sửa dòng `..` trong README; ghi kết quả `npm audit` | `submission/hoang_mai_toan_173820_n32/`, `.github/workflows/test.yml`, `README.md`, `docs/TEST_REPORT.md`, `docs/SECURITY_PRIVACY_CHECKLIST.md`, thư mục nộp bài trong fork `ktpmud-project` | Chạy `scripts/validate_submission.py` của đề; so tên file đúng chữ hoa/thường như CI Ubuntu | nhóm điền | `<alias>` |
 
 ## Lần dùng AI trước ngày 18/11 (nhóm bổ sung)
 

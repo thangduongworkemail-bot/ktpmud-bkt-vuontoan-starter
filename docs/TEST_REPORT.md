@@ -11,7 +11,7 @@ Kế hoạch và mã test: `docs/Test_plan.md`. Bản này ghi **kết quả th�
 | CI | GitHub Actions `ubuntu-latest`, ma trận Node 18.x / 20.x / 22.x (`.github/workflows/test.yml`) |
 | Công cụ test | `node:test` có sẵn trong Node, không cài thêm thư viện |
 | CSDL khi test | File SQLite tạm trong thư mục temp của hệ điều hành, tạo mới và xóa sau mỗi lần chạy; không đụng `data/vuon-toan.db` |
-| Commit được test | _điền SHA khi chạy lại trước Freeze_ |
+| Commit được test | `488f166` (18/11). Các commit sau đó đến 18/11 chỉ sửa README, tài liệu và workflow, không đổi code. Chạy lại ở commit Freeze. |
 
 Lệnh:
 
@@ -44,8 +44,8 @@ Lần chạy local ngày 18/11/2026: **34 test, 34 đạt, 0 lỗi**, khoảng 1
 |---|---|---|
 | T-33 | Làm trọn một lượt chỉ bằng bàn phím, nhập sai thấy lỗi dễ hiểu, F5 giữa hai bước | **Chưa chạy.** Cần một người làm trên trình duyệt với `hocsinh01` và ghi kết quả vào đây. |
 | T-40 | `git diff` so với tag `bkt-2026-v1` (057a482) không đụng `server/auth.js`, Dockerfile, DEPLOY.md, tài khoản mẫu | Đạt (18/11). Chạy lại trước Freeze. |
-| T-41 | `npm test` đạt sau `npm ci` trên bản clone mới | Chưa chạy trên bản clone mới. |
-| T-42 | Workflow CI xanh trên Pull Request | Chưa chạy. Cần mở PR trong fork (`work` → `main`). |
+| T-41 | `npm test` đạt sau `npm ci` trên bản clone mới | Đạt (18/11): clone mới nhánh `test` tại `488f166`, `npm ci` + `npm test` trên Node 18.20.8, 20.20.2 và 22.23.5 đều 34/34. Sau đó `npm run reset-db` + `npm start` chạy, các trang trả HTTP 200. |
+| T-42 | Workflow CI xanh trên Pull Request | Chưa chạy. Workflow chạy khi mở PR hoặc khi push lên `main`, `work`, `test`. Ghi link lần chạy vào `ci_run_url` của `source-ref.json`. |
 | T-43 | Không có secret, `.env`, tên thật | Đạt (18/11): quét mẫu secret giống `validate_submission.py`, không có file `.env`. |
 | Smoke | Chạy server với CSDL tạm: `lesson.html` nạp component, API trả câu hỏi không có đáp án, nộp bài trả 4 trường hợp | Đạt (18/11) |
 

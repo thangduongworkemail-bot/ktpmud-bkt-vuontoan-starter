@@ -1,10 +1,10 @@
-# B-10: chạy npm ci + npm test trên mọi Pull Request (và khi push lên main/work).
+# B-10: chạy npm ci + npm test trên mọi Pull Request (và khi push lên main/work/test).
 name: test
 
 on:
   pull_request:
   push:
-    branches: [main, work]
+    branches: [main, work, test]
 
 permissions:
   contents: read
